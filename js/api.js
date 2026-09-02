@@ -1,69 +1,124 @@
-const API = "http://127.0.0.1:5000/api";
+const API_BASE = "/api";
 
-async function getPrediction() {
+/* ==========================
+   THERMAL FORECAST
+========================== */
 
-    const response =
-    await fetch(`${API}/predict`);
+async function getForecast() {
+    try {
 
-    const data =
-    await response.json();
+        const response = await fetch(
+            `${API_BASE}/predict`
+        );
 
-    console.log(data);
+        if (!response.ok)
+            throw new Error("Forecast Server Offline");
 
-    return data;
+        return await response.json();
+
+    } catch (error) {
+
+        console.error(
+            "THERMAL PREDICTION FAILURE",
+            error
+        );
+
+        return null;
+    }
 }
 
+/* ==========================
+   CAUSAL ANALYSIS
+========================== */
 
 async function getCausalDrivers() {
 
-    const response =
-    await fetch(`${API}/causal`);
+    try {
 
-    const data =
-    await response.json();
+        const response =
+            await fetch(
+                `${API_BASE}/causal`
+            );
 
-    console.log(data);
+        return await response.json();
 
-    return data;
+    } catch (error) {
+
+        console.error(
+            "CAUSAL ENGINE FAILURE",
+            error
+        );
+
+        return null;
+    }
 }
 
+/* ==========================
+   SIMULATION
+========================== */
 
-async function runSimulation(
+async function runSimulationAPI(
     roofs,
     trees,
     pavements
-){
+) {
 
-    const response =
-    await fetch(`${API}/simulate`, {
+    try {
 
-        method: "POST",
+        const response =
+            await fetch(
+                `${API_BASE}/simulate`,
+                {
+                    method: "POST",
 
-        headers: {
-            "Content-Type":"application/json"
-        },
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
 
-        body: JSON.stringify({
+                    body: JSON.stringify({
+                        cool_roofs: roofs,
+                        tree_canopy: trees,
+                        permeable: pavements
+                    })
+                }
+            );
 
-            cool_roofs: roofs,
-            tree_canopy: trees,
-            permeable: pavements
+        return await response.json();
 
-        })
+    } catch (error) {
 
-    });
+        console.error(
+            "SIMULATION FAILURE",
+            error
+        );
 
-    return await response.json();
+        return null;
+    }
 }
 
+/* ==========================
+   OPTIMIZATION
+========================== */
 
-async function optimizeBudget() {
+async function optimizeBudgetAPI() {
 
-    const response =
-    await fetch(`${API}/optimize`);
+    try {
 
-    const data =
-    await response.json();
+        const response =
+            await fetch(
+                `${API_BASE}/optimize`
+            );
 
-    return data;
+        return await response.json();
+
+    } catch (error) {
+
+        console.error(
+            "OPTIMIZER FAILURE",
+            error
+        );
+
+        return null;
+    }
 }
